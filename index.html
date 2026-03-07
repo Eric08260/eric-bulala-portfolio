@@ -1792,6 +1792,64 @@
         .theme-toggle .fa-sun { display: none; }
         .theme-toggle .fa-moon { display: inline-block; }
 
+        /* --- Profile Lightbox --- */
+        .profile-lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: zoom-out;
+        }
+
+        .profile-lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+
+        .profile-lightbox.active img {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            z-index: 10001;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        .profile-img-wrapper {
+            cursor: zoom-in;
+        }
+
         /* --- Light Mode Overrides --- */
         body.light-mode {
             background-color: #f0f2f5;
@@ -2098,6 +2156,7 @@
                     </div>
                     <div class="reflection-plane"></div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -2562,6 +2621,12 @@
         <p>&copy; 2026 Eric Bulala. Built with passion & code.</p>
     </footer>
 
+<!-- Profile Lightbox (must be at body root for position:fixed) -->
+<div class="profile-lightbox" id="profileLightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img src="https://scontent-mnl1-1.xx.fbcdn.net/v/t39.30808-6/513861353_708497805124305_6499532183063205464_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=1d70fc&_nc_eui2=AeEvhrR3qJopsZBcs_3ILbs-h6wSJcvUwPWHrBIly9TA9XzfvKK28Eo-9pO5M34z3kABHidVNfJxD2QmCyszaxue&_nc_ohc=a0KfFmcoOZ0Q7kNvwFOcJ6D&_nc_oc=Adm7BL_-aGQAK-xY0C_OfAN6wAGwydziI8AC_n0Op4LN0Fta34saC0mW9WGSmwX-xDk&_nc_zt=23&_nc_ht=scontent-mnl1-1.xx&_nc_gid=8YIgDjamtSbDTg89GYiPRw&_nc_ss=8&oh=00_Afy1WAcj1mej0aHiPkr93uMJBZkwHEVTbFM9K9UtpeGW_Q&oe=69B18A3B" alt="Eric Bulala - Full Photo">
+</div>
+
     <!-- Scripts -->
     <script>
         // Detect touch device
@@ -2902,6 +2967,28 @@
                 }
             });
         });
+        // --- Profile Lightbox ---
+        (function() {
+            const wrapper = document.querySelector('.profile-img-wrapper');
+            const lightbox = document.getElementById('profileLightbox');
+            const closeBtn = document.getElementById('lightboxClose');
+            if (!wrapper || !lightbox) return;
+
+            wrapper.addEventListener('click', () => {
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+        })();
+
         // --- Splash Screen ---
         (function() {
             const text = 'LOADING PORTFOLIO';
