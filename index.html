@@ -1407,6 +1407,135 @@
             .cert-grid {
                 grid-template-columns: 1fr;
             }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .edu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .home-buttons {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            section {
+                padding: 100px 16px 60px;
+            }
+
+            .home-content {
+                padding-top: 0;
+            }
+        }
+
+        /* --- Extra Small Screens --- */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.5rem; }
+
+            .home-text .tagline {
+                font-size: 1rem;
+            }
+
+            .home-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .home-buttons .btn {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stats-row {
+                gap: 1rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+            }
+
+            .profile-img-wrapper {
+                width: 190px;
+                height: 190px;
+            }
+
+            .profile-3d-scene {
+                width: 190px;
+                height: 190px;
+            }
+
+            .profile-glow {
+                width: 220px;
+                height: 220px;
+            }
+
+            .orbit-ring-1, .orbit-ring-2, .orbit-ring-3 {
+                display: none;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .splash-text {
+                letter-spacing: 1px;
+                font-size: 0.75rem;
+            }
+
+            section {
+                padding: 90px 12px 50px;
+            }
+
+            .project-card .project-body {
+                padding: 1rem;
+            }
+
+            .timeline-item {
+                padding-left: 40px;
+            }
+
+            .timeline::before {
+                left: 15px;
+            }
+
+            .timeline-dot {
+                left: 9px;
+            }
+
+            nav .logo img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .contact-form {
+                padding: 1.5rem;
+            }
+
+            footer {
+                padding: 2rem 12px;
+            }
+
+            .footer-links a {
+                margin: 0 8px;
+                font-size: 1rem;
+            }
         }
 
         /* --- Experience Section --- */
