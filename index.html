@@ -1850,6 +1850,51 @@
             cursor: zoom-in;
         }
 
+        /* --- Back to Top Button --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            color: #fff;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 480px) {
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 42px;
+                height: 42px;
+                font-size: 1rem;
+            }
+        }
+
         /* --- Light Mode Overrides --- */
         body.light-mode {
             background-color: #f0f2f5;
@@ -2621,6 +2666,11 @@
         <p>&copy; 2026 Eric Bulala. Built with passion & code.</p>
     </footer>
 
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
 <!-- Profile Lightbox (must be at body root for position:fixed) -->
 <div class="profile-lightbox" id="profileLightbox">
     <button class="lightbox-close" id="lightboxClose">&times;</button>
@@ -2967,6 +3017,22 @@
                 }
             });
         });
+        // --- Back to Top Button ---
+        (function() {
+            const btn = document.getElementById('backToTop');
+            if (!btn) return;
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 400) {
+                    btn.classList.add('visible');
+                } else {
+                    btn.classList.remove('visible');
+                }
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+
         // --- Profile Lightbox ---
         (function() {
             const wrapper = document.querySelector('.profile-img-wrapper');
