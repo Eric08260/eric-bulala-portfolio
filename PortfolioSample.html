@@ -1412,7 +1412,11 @@
             }
 
             .cert-grid {
-                grid-template-columns: 1fr;
+                flex-wrap: nowrap;
+            }
+
+            .cert-card {
+                flex: 0 0 260px;
             }
 
             .skills-grid {
@@ -1727,49 +1731,129 @@
         }
 
         .cert-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 16px;
-            max-width: 1000px;
+            display: flex;
+            gap: 20px;
+            max-width: 100%;
             width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 0 20px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 212, 255, 0.3) rgba(20, 20, 35, 0.3);
+        }
+
+        .cert-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .cert-grid::-webkit-scrollbar-track {
+            background: rgba(20, 20, 35, 0.3);
+            border-radius: 4px;
+        }
+
+        .cert-grid::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .cert-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.5);
         }
 
         .cert-card {
+            flex: 0 0 300px;
             background: rgba(20, 20, 35, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px 24px;
-            text-align: left;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        box-shadow 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        border-color 0.4s ease;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .cert-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(168, 85, 247, 0.08));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .cert-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            background: rgba(20, 20, 35, 0.8);
+            transform: translateY(-8px) scale(1.03);
+            border-color: rgba(0, 212, 255, 0.25);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35),
+                        0 0 20px rgba(0, 212, 255, 0.1),
+                        0 0 40px rgba(168, 85, 247, 0.06);
         }
 
-        .cert-card .cert-icon {
-            color: #00d4ff;
-            font-size: 1.2rem;
-            margin-top: 3px;
-            flex-shrink: 0;
+        .cert-card:hover::after {
+            opacity: 1;
         }
 
-        .cert-card h4 {
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 4px;
-            line-height: 1.4;
+        .cert-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            cursor: zoom-in;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        filter 0.4s ease;
+            filter: brightness(0.92);
         }
 
-        .cert-card .cert-date {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.7rem;
-            color: #666;
+        .cert-card:hover img {
+            transform: scale(1.06);
+            filter: brightness(1);
+        }
+
+        /* --- Certificate Lightbox --- */
+        .cert-lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        visibility 0.4s ease;
+            cursor: zoom-out;
+        }
+
+        .cert-lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cert-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.25),
+                        0 0 120px rgba(168, 85, 247, 0.1),
+                        0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7) translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.5s ease;
+            object-fit: contain;
+        }
+
+        .cert-lightbox.active img {
+            transform: scale(1) translateY(0);
         }
         /* --- Light Mode Toggle Button --- */
         .theme-toggle {
@@ -2174,7 +2258,7 @@
                 </div>
                 <div class="stats-row">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="10">0+</div>
+                        <div class="stat-number" data-target="15">0+</div>
                         <div class="stat-label">Projects</div>
                     </div>
                     <div class="stat-item">
@@ -2182,7 +2266,7 @@
                         <div class="stat-label">Tech Skills</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-target="7">0+</div>
+                        <div class="stat-number" data-target="35">0+</div>
                         <div class="stat-label">Certifications</div>
                     </div>
                 </div>
@@ -2218,6 +2302,20 @@
         <p class="section-subtitle">Where I've contributed</p>
         <div class="glow-divider"></div>
         <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">July 2025 – Present</span>
+                    <h3>IT Instructor</h3>
+                    <h4>Trinidad Municipal College — Trinidad, Bohol</h4>
+                    <ul>
+                        <li>Teaching undergraduate courses in Information Technology, including Programming, Web Development, and Computer Fundamentals.</li>
+                        <li>Developing course materials, lesson plans, and hands-on laboratory activities using modern tools and technologies.</li>
+                        <li>Guiding students in capstone projects and providing mentorship in software development and problem-solving skills.</li>
+                        <li>Facilitating practical sessions on HTML, CSS, JavaScript, PHP/Laravel, and database management with MySQL.</li>
+                    </ul>
+                </div>
+            </div>
             <div class="timeline-item fade-in">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
@@ -2266,7 +2364,7 @@
         <div class="glow-divider"></div>
         <div class="project-grid">
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1601134467661-3d775b999c8b?w=600&h=400&fit=crop" alt="RFID Attendance Scanner" class="project-img">
+                <img src="Photos/RFID.png" alt="RFID Attendance Scanner" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">IoT / Embedded</span>
                     <h3>Attendance RFID Scanner with Parental Notification</h3>
@@ -2280,7 +2378,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop" alt="CNN Ball Classification" class="project-img">
+                <img src="Photos/CNN.png" alt="CNN Ball Classification" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">AI / Machine Learning</span>
                     <h3>Ball Classification using CNN</h3>
@@ -2294,7 +2392,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop" alt="Pathfinding Robot" class="project-img">
+                <img src="Photos/Pathfinding.png" alt="Pathfinding Robot" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Robotics</span>
                     <h3>Pathfinding Robot</h3>
@@ -2308,7 +2406,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?w=600&h=400&fit=crop" alt="Sumobot" class="project-img">
+                <img src="Photos/Sumobot.png" alt="Sumobot" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Robotics</span>
                     <h3>Sumobot</h3>
@@ -2321,7 +2419,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=600&h=400&fit=crop" alt="Traffic Light System" class="project-img">
+                <img src="Photos/4Way.png" alt="Traffic Light System" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Embedded Systems</span>
                     <h3>4-Way Traffic Light Management System</h3>
@@ -2347,7 +2445,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop" alt="Safety Savvy App" class="project-img">
+                <img src="Photos/SafetySavvy.jpg" alt="Safety Savvy App" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Mobile App</span>
                     <h3>Safety Savvy App</h3>
@@ -2360,20 +2458,20 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop" alt="EduKiddo App" class="project-img">
+                <img src="Photos/Fun1.jpg" alt="Fun in Grade 1 App" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Mobile App</span>
-                    <h3>EduKiddo App</h3>
+                    <h3>Fun in Grade 1 App</h3>
                     <p>Engages kids with games and activities (mother tongue-based), supports reading, writing, and speaking skills with colorful visuals.</p>
                     <div class="project-tech">
-                        <span>Java</span>
+                        <span>Flutter</span>
                         <span>Android</span>
                         <span>Education</span>
                     </div>
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=400&fit=crop" alt="FabLab AR++" class="project-img">
+                <img src="Photos/Fablab.jpg" alt="FabLab AR++" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">AR / 3D</span>
                     <h3>FabLab AR++ | 3D Modelling & Animation</h3>
@@ -2387,7 +2485,7 @@
                 </div>
             </div>
             <div class="project-card fade-in">
-                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop" alt="AC-DC Converter" class="project-img">
+                <img src="Photos/AC-DC.png" alt="AC-DC Converter" class="project-img">
                 <div class="project-card-body">
                     <span class="project-tag">Electronics</span>
                     <h3>AC-DC Converter</h3>
@@ -2396,6 +2494,72 @@
                         <span>Circuit Design</span>
                         <span>Electronics</span>
                         <span>Soldering</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card fade-in">
+                <img src="Photos/AI Chatbot.png" alt="AI Chatbot" class="project-img">
+                <div class="project-card-body">
+                    <span class="project-tag">AI / NLP</span>
+                    <h3>AI Chatbot</h3>
+                    <p>An intelligent chatbot powered by AI and natural language processing to handle conversations and provide automated responses.</p>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>AI</span>
+                        <span>NLP</span>
+                        <span>API</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card fade-in">
+                <img src="Photos/PDF Merge.png" alt="PDF Merge Tool" class="project-img">
+                <div class="project-card-body">
+                    <span class="project-tag">Utility Tool</span>
+                    <h3>PDF Merge Tool</h3>
+                    <p>A desktop utility that merges multiple PDF files into a single document quickly and efficiently.</p>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>PyPDF2</span>
+                        <span>GUI</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card fade-in">
+                <img src="Photos/To-Do List App.png" alt="To-Do List App" class="project-img">
+                <div class="project-card-body">
+                    <span class="project-tag">Web App</span>
+                    <h3>To-Do List App</h3>
+                    <p>A task management application for creating, organizing, and tracking daily to-do items with a clean interface.</p>
+                    <div class="project-tech">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card fade-in">
+                <img src="Photos/WiFi Password Manager.png" alt="WiFi Password Manager" class="project-img">
+                <div class="project-card-body">
+                    <span class="project-tag">Utility Tool</span>
+                    <h3>WiFi Password Manager</h3>
+                    <p>Retrieves and manages saved WiFi passwords from connected networks for easy reference and backup.</p>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Networking</span>
+                        <span>GUI</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card fade-in">
+                <img src="Photos/Zombie Shooter.png" alt="Zombie Shooter Game" class="project-img">
+                <div class="project-card-body">
+                    <span class="project-tag">Game Development</span>
+                    <h3>Zombie Shooter Game</h3>
+                    <p>An action-packed shooter game where players survive waves of zombies with various weapons and power-ups.</p>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Pygame</span>
+                        <span>Game Design</span>
                     </div>
                 </div>
             </div>
@@ -2507,26 +2671,57 @@
         </div>
     </section>
 
-    <!-- EDUCATION -->
-    <section id="education">
-        <h2>Education</h2>
-        <p class="section-subtitle">Academic background</p>
-        <div class="glow-divider"></div>
-        <div class="edu-grid">
-            <div class="edu-card fade-in">
-                <i class="fa-solid fa-graduation-cap edu-icon"></i>
-                <h3>Bohol Island State University - Main Campus</h3>
-                <p class="edu-degree">Bachelor of Science in Computer Engineering (BSCpE)</p>
-                <span class="edu-year">2021 - 2025</span>
-            </div>
-            <div class="edu-card fade-in">
-                <i class="fa-solid fa-school edu-icon"></i>
-                <h3>Trinidad Municipal College (TMC)</h3>
-                <p class="edu-degree">Bachelor of Science in Information Technology (BSIT) &mdash; 1st Semester</p>
-                <span class="edu-year">2020 - 2021</span>
-            </div>
+<!-- EDUCATION -->
+<section id="education">
+    <h2>Education</h2>
+    <p class="section-subtitle">Academic background & ongoing studies</p>
+    <div class="glow-divider"></div>
+    <div class="edu-grid">
+        <!-- Master's (current) -->
+        <div class="edu-card fade-in">
+            <i class="fa-solid fa-graduation-cap edu-icon"></i>
+            <h3>State University of Northern Negros (SUNN)</h3>
+            <p class="edu-degree">Master of Information Technology (MIT)</p>
+            <span class="edu-year">Currently Studying · 2025 – Present</span>
+            <p class="edu-note" style="margin-top: 12px; font-size: 0.95rem; color: #a0a0b5;">
+                Pursuing advanced studies in information technology, focusing on emerging technologies, systems development, data management, and IT leadership.
+            </p>
         </div>
-    </section>
+
+        <!-- Bachelor's in Computer Engineering -->
+        <div class="edu-card fade-in">
+            <i class="fa-solid fa-graduation-cap edu-icon"></i>
+            <h3>Bohol Island State University - Main Campus</h3>
+            <p class="edu-degree">Bachelor of Science in Computer Engineering (BSCpE)</p>
+            <span class="edu-year">2021 – 2025</span>
+            <p class="edu-note" style="margin-top: 12px; font-size: 0.95rem; color: #a0a0b5;">
+                Completed undergraduate studies in computer engineering with emphasis on hardware-software integration, embedded systems, IoT, and digital design.
+            </p>
+        </div>
+
+        <!-- Earlier college / TMC -->
+        <div class="edu-card fade-in">
+            <i class="fa-solid fa-school edu-icon"></i>
+            <h3>Trinidad Municipal College (TMC)</h3>
+            <p class="edu-degree">Bachelor of Science in Information Technology (BSIT) — 1st Semester</p>
+            <span class="edu-year">2020 – 2021</span>
+            <p class="edu-note" style="margin-top: 12px; font-size: 0.95rem; color: #a0a0b5;">
+                Initial exposure to information technology fundamentals before pursuing a full engineering degree.
+            </p>
+        </div>
+
+        <!-- Senior High School (GAS-STEM) -->
+        <div class="edu-card fade-in">
+            <i class="fa-solid fa-school edu-icon"></i>
+            <h3>Mahayag National High School</h3>
+            <p class="edu-degree">Senior High School – General Academic Strand (GAS) with STEM focus</p>
+            <span class="edu-year">2019 – 2021 (or appropriate years) · Class Salutatorian</span>
+            <p class="edu-note" style="margin-top: 12px; font-size: 0.95rem; color: #a0a0b5;">
+                Excelled in a rigorous academic program combining general education with advanced STEM subjects, achieving Class Salutatorian honors through consistent academic excellence and leadership.
+            </p>
+        </div>
+    </div>
+</section>
 
     <!-- CERTIFICATIONS -->
     <section id="certifications">
@@ -2534,69 +2729,42 @@
         <p class="section-subtitle">Continuous learning & growth</p>
         <div class="glow-divider"></div>
         <div class="cert-grid">
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Kickstart Angular: Introductory Workshop on Dynamic Web App Development</h4>
-                    <span class="cert-date">May 2025</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Web Development Unlocked: Start Your Coding Adventure Today</h4>
-                    <span class="cert-date">December 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>WebDev 101: Creating Interactive Websites using HTML, CSS, PHP, and Database</h4>
-                    <span class="cert-date">November 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Internet of Things (IoT) and Smart Systems</h4>
-                    <span class="cert-date">October 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Artificial Intelligence and Machine Learning: Shaping the Future of IT</h4>
-                    <span class="cert-date">October 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Front End Development: HTML and CSS &mdash; Great Learning Academy</h4>
-                    <span class="cert-date">November 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Complete Java Course: From Basics to Advanced &mdash; Udemy</h4>
-                    <span class="cert-date">October 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>Key Pillar of UI/UX Design Webinar &mdash; Uniathena</h4>
-                    <span class="cert-date">October 2024</span>
-                </div>
-            </div>
-            <div class="cert-card fade-in">
-                <i class="fa-solid fa-certificate cert-icon"></i>
-                <div>
-                    <h4>2-Day Python for Data Analytics Bootcamp &mdash; SkillCamper</h4>
-                    <span class="cert-date">October 2024</span>
-                </div>
-            </div>
+            <div class="cert-card fade-in"><img src="Certificates/1129 E-certificate.jpg" alt="E-certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/55.png" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Bulala E.-1.jpg" alt="Bulala E. Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/BULALA.png" alt="Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Certificate (1)_page-0001.jpg" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Certificate (Nov 12).jpg" alt="Certificate Nov 12" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Certificate of Participation - Eric B. Bulala_page-0001.jpg" alt="Certificate of Participation" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Certificate of Participation.jpg" alt="Certificate of Participation" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Certificate_page-0001.jpg" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/download (2).png" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/E Certificate.jpg" alt="E Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/E-CERTIFICATE_20241122_175755_0000.png" alt="E-Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/ef181527-8e99-4da4-b2f1-0e827165f3c5_page-0001.jpg" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala (1).jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/ERIC B. BULALA (2).jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/ERIC B. BULALA - Nov 23.jpg" alt="Eric B. Bulala Nov 23 Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala IOT and Smart Systems Webinar Certificate_page-0001.jpg" alt="IoT and Smart Systems Webinar Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala.png" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala_34.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala_AI&ML-Webinar_page-0001.jpg" alt="AI & ML Webinar Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B. Bulala_page-0001.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric Bulala (1).jpg" alt="Eric Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric Bulala (2).jpg" alt="Eric Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric Bulala (3).jpg" alt="Eric Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric Bulala - Nov 12.jpg" alt="Eric Bulala Nov 12 Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric B_1. Bulala.png" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric_B._Bulala20241109-72-1h5f4xa.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric_B._Bulala20241109-72-1lb8n55.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric_B._Bulala20241112-74-1ettima.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Eric_B._Bulala20241112-74-6xnxlj.jpg" alt="Eric B. Bulala Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/Messenger_creation_8E004596-6978-415E-B608-0A6EF910ACC2.jpeg" alt="Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/PhilNITS Seminar Attendance_page-0001.jpg" alt="PhilNITS Seminar Attendance" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/UC-57641ff6-0064-41f3-b4ed-335c6df435ff_page-0001.jpg" alt="Udemy Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/UC-aa3a1ff6-8c2f-4d52-9d1b-df2c1b759ce6.jpg" alt="Udemy Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/UC-b21f24a8-6fa6-4811-836a-d61dd345d219_page-0001 (1).jpg" alt="Udemy Certificate" loading="lazy"></div>
+            <div class="cert-card fade-in"><img src="Certificates/UC-fbe6e1e7-1fd1-453d-9431-97f8369161a1_page-0001.jpg" alt="Udemy Certificate" loading="lazy"></div>
         </div>
     </section>
 
@@ -2610,7 +2778,7 @@
             <div class="contact-card fade-in">
                 <i class="fa-solid fa-phone"></i>
                 <h4>Phone</h4>
-                <p><a href="tel:+639516535003">+63 951 653 5003</a></p>
+                <p><a href="tel:+639516535003">+63 951 653 5003<br>+63 992 271 9094</a></p>
             </div>
             <div class="contact-card fade-in">
                 <i class="fa-solid fa-envelope"></i>
@@ -2628,9 +2796,14 @@
                 <p><a href="https://linkedin.com/in/eric-bulala" target="_blank">linkedin.com/in/eric-bulala</a></p>
             </div>
             <div class="contact-card fade-in">
-                <i class="fa-solid fa-globe"></i>
-                <h4>Portfolio</h4>
-                <p><a href="https://sites.google.com/bisu.edu.ph/ericsampleworks?usp=sharing" target="_blank">Sample Works</a></p>
+                <i class="fa-brands fa-facebook"></i>
+                <h4>Facebook</h4>
+                <p><a href="https://www.facebook.com/eric.bulala.2025/" target="_blank">eric.bulala.2025</a></p>
+            </div>
+            <div class="contact-card fade-in">
+                <i class="fa-brands fa-github"></i>
+                <h4>GitHub</h4>
+                <p><a href="https://github.com/Eric08260" target="_blank">Eric08260</a></p>
             </div>
         </div>
 
@@ -2667,7 +2840,7 @@
         <div class="footer-links">
             <a href="https://linkedin.com/in/eric-bulala" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
             <a href="mailto:ericbulala0826@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
-            <a href="https://sites.google.com/bisu.edu.ph/ericsampleworks?usp=sharing" target="_blank" title="Portfolio"><i class="fa-solid fa-globe"></i></a>
+            <a href="https://www.facebook.com/eric.bulala.2025/" target="_blank" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
         </div>
         <p>&copy; 2026 Eric Bulala. Built with passion & code.</p>
     </footer>
@@ -2676,6 +2849,12 @@
 <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
+
+<!-- Certificate Lightbox -->
+<div class="cert-lightbox" id="certLightbox">
+    <button class="lightbox-close" id="certLightboxClose">&times;</button>
+    <img src="" alt="Certificate Full View" id="certLightboxImg">
+</div>
 
 <!-- Profile Lightbox (must be at body root for position:fixed) -->
 <div class="profile-lightbox" id="profileLightbox">
@@ -3037,6 +3216,32 @@
             btn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        })();
+
+        // --- Certificate Lightbox ---
+        (function() {
+            const certLightbox = document.getElementById('certLightbox');
+            const certLightboxImg = document.getElementById('certLightboxImg');
+            const certCloseBtn = document.getElementById('certLightboxClose');
+            if (!certLightbox) return;
+
+            document.querySelectorAll('.cert-card img').forEach(img => {
+                img.addEventListener('click', () => {
+                    certLightboxImg.src = img.src;
+                    certLightboxImg.alt = img.alt;
+                    certLightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeCertLightbox() {
+                certLightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            certCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); closeCertLightbox(); });
+            certLightbox.addEventListener('click', (e) => { if (e.target === certLightbox) closeCertLightbox(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCertLightbox(); });
         })();
 
         // --- Profile Lightbox ---
